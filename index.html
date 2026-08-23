@@ -4,24 +4,66 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#0b0b10">
-  <title>Rituraj | Links</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Rituraj | Admin</title>
+  <link rel="stylesheet" href="admin.css">
 </head>
 <body>
-  <main class="page">
-    <section class="profile">
-      <img id="avatar" class="avatar" src="https://i.pravatar.cc/300?img=12" alt="Profile">
-      <h1 id="displayName">Rituraj</h1>
-      <div id="username" class="username">@yourusername</div>
-      <p id="bio" class="bio">Connect with me 👋</p>
+  <main class="wrap">
+    <section id="loginPanel" class="panel">
+      <h1>🔐 Admin Login</h1>
+      <p class="muted">Login to manage your Instagram links.</p>
+      <input id="email" type="email" placeholder="Email" autocomplete="email">
+      <input id="password" type="password" placeholder="Password" autocomplete="current-password">
+      <button id="loginBtn">Login</button>
+      <p id="loginMsg" class="msg"></p>
     </section>
 
-    <section id="links" class="links" aria-label="Links"></section>
-    <p id="emptyState" class="empty" hidden>No links available.</p>
+    <section id="appPanel" class="panel" hidden>
+      <header class="topbar">
+        <div>
+          <h1>Link Manager</h1>
+          <p class="muted">Add, edit, hide, delete and reorder links.</p>
+        </div>
+        <button id="logoutBtn" class="secondary">Logout</button>
+      </header>
 
-    <footer>© <span id="year"></span> Rituraj</footer>
+      <section class="profileBox">
+        <h2>Profile</h2>
+        <div class="grid">
+          <input id="profileName" placeholder="Display name">
+          <input id="profileUsername" placeholder="@username">
+          <input id="profileAvatar" placeholder="Profile photo URL">
+          <textarea id="profileBio" placeholder="Short bio"></textarea>
+        </div>
+        <button id="saveProfileBtn">Save Profile</button>
+      </section>
+
+      <section class="linksBox">
+        <div class="sectionHead">
+          <h2>Your Links</h2>
+          <button id="addBtn">＋ Add Link</button>
+        </div>
+        <div id="linkList" class="linkList"></div>
+      </section>
+    </section>
   </main>
 
-  <script type="module" src="app.js"></script>
+  <dialog id="editor">
+    <form method="dialog" id="linkForm" class="dialog">
+      <h2 id="editorTitle">Add Link</h2>
+      <input id="linkTitle" placeholder="Link name" required>
+      <input id="linkSubtitle" placeholder="Small description">
+      <input id="linkUrl" type="url" placeholder="https://..." required>
+      <input id="linkIcon" placeholder="Icon slug e.g. whatsapp, instagram, youtube" required>
+      <label class="switchRow"><input id="linkEnabled" type="checkbox" checked> Visible on public page</label>
+      <div class="actions">
+        <button type="button" class="secondary" id="cancelBtn">Cancel</button>
+        <button type="submit">Save</button>
+      </div>
+      <p id="editMsg" class="msg"></p>
+    </form>
+  </dialog>
+
+  <script type="module" src="admin.js"></script>
 </body>
 </html>
