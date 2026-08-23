@@ -4,67 +4,496 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#0b0b10">
+
   <title>Rituraj | Admin</title>
+
   <link rel="stylesheet" href="admin.css">
 </head>
+
 <body>
+
   <main class="wrap">
+
+    <!-- =========================
+         LOGIN PANEL
+    ========================== -->
     <section id="loginPanel" class="panel">
-      <h1>🔐 Admin Login</h1>
-      <p class="muted">Login to manage your Instagram links.</p>
-      <input id="email" type="email" placeholder="Email" autocomplete="email">
-      <input id="password" type="password" placeholder="Password" autocomplete="current-password">
-      <button id="loginBtn">Login</button>
+
+      <div class="loginHeader">
+        <div class="adminIcon">🔐</div>
+
+        <h1>Admin Login</h1>
+
+        <p class="muted">
+          Login to manage your Link Manager.
+        </p>
+      </div>
+
+      <div class="formGroup">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          placeholder="Enter admin email"
+          autocomplete="email"
+        >
+      </div>
+
+      <div class="formGroup">
+        <label for="password">Password</label>
+
+        <div class="passwordBox">
+          <input
+            id="password"
+            type="password"
+            placeholder="Enter password"
+            autocomplete="current-password"
+          >
+
+          <button
+            type="button"
+            id="togglePassword"
+            class="passwordToggle"
+            aria-label="Show password"
+          >
+            👁️
+          </button>
+        </div>
+      </div>
+
+      <button id="loginBtn" class="primaryBtn">
+        Login
+      </button>
+
       <p id="loginMsg" class="msg"></p>
+
     </section>
 
+
+    <!-- =========================
+         ADMIN APP
+    ========================== -->
     <section id="appPanel" class="panel" hidden>
+
+      <!-- TOP BAR -->
       <header class="topbar">
-        <div>
-          <h1>Link Manager</h1>
-          <p class="muted">Add, edit, hide, delete and reorder links.</p>
+
+        <div class="brandArea">
+
+          <div class="brandIcon">
+            🔗
+          </div>
+
+          <div>
+            <h1>Link Manager</h1>
+
+            <p class="muted">
+              Manage your public profile and links.
+            </p>
+          </div>
+
         </div>
-        <button id="logoutBtn" class="secondary">Logout</button>
+
+        <button id="logoutBtn" class="secondary">
+          Logout
+        </button>
+
       </header>
 
-      <section class="profileBox">
-        <h2>Profile</h2>
-        <div class="grid">
-          <input id="profileName" placeholder="Display name">
-          <input id="profileUsername" placeholder="@username">
-          <input id="profileAvatar" placeholder="Profile photo URL">
-          <textarea id="profileBio" placeholder="Short bio"></textarea>
+
+      <!-- =========================
+           DASHBOARD
+      ========================== -->
+      <section class="dashboard">
+
+        <div class="statCard">
+          <span class="statIcon">🔗</span>
+
+          <div>
+            <span class="statLabel">
+              Total Links
+            </span>
+
+            <strong id="totalLinks">
+              0
+            </strong>
+          </div>
         </div>
-        <button id="saveProfileBtn">Save Profile</button>
+
+
+        <div class="statCard">
+          <span class="statIcon">👁️</span>
+
+          <div>
+            <span class="statLabel">
+              Visible Links
+            </span>
+
+            <strong id="visibleLinks">
+              0
+            </strong>
+          </div>
+        </div>
+
+
+        <div class="statCard">
+          <span class="statIcon">🙈</span>
+
+          <div>
+            <span class="statLabel">
+              Hidden Links
+            </span>
+
+            <strong id="hiddenLinks">
+              0
+            </strong>
+          </div>
+        </div>
+
       </section>
 
-      <section class="linksBox">
+
+      <!-- =========================
+           PROFILE
+      ========================== -->
+      <section class="profileBox">
+
         <div class="sectionHead">
-          <h2>Your Links</h2>
-          <button id="addBtn">＋ Add Link</button>
+          <div>
+            <h2>Profile</h2>
+
+            <p class="muted">
+              This information appears on your public page.
+            </p>
+          </div>
         </div>
-        <div id="linkList" class="linkList"></div>
+
+
+        <div class="profilePreview">
+
+          <div class="avatarPreview">
+            <img
+              id="profileAvatarPreview"
+              src=""
+              alt="Profile preview"
+              hidden
+            >
+
+            <span id="avatarPlaceholder">
+              👤
+            </span>
+          </div>
+
+          <div>
+            <strong id="profilePreviewName">
+              Your Name
+            </strong>
+
+            <span id="profilePreviewUsername" class="muted">
+              @username
+            </span>
+          </div>
+
+        </div>
+
+
+        <div class="grid">
+
+          <div class="formGroup">
+            <label for="profileName">
+              Display Name
+            </label>
+
+            <input
+              id="profileName"
+              placeholder="Your name"
+            >
+          </div>
+
+
+          <div class="formGroup">
+            <label for="profileUsername">
+              Username
+            </label>
+
+            <input
+              id="profileUsername"
+              placeholder="@username"
+            >
+          </div>
+
+
+          <div class="formGroup fullWidth">
+            <label for="profileAvatar">
+              Profile Photo URL
+            </label>
+
+            <input
+              id="profileAvatar"
+              type="url"
+              placeholder="https://example.com/photo.jpg"
+            >
+          </div>
+
+
+          <div class="formGroup fullWidth">
+            <label for="profileBio">
+              Bio
+            </label>
+
+            <textarea
+              id="profileBio"
+              placeholder="Write a short bio..."
+              rows="3"
+            ></textarea>
+          </div>
+
+        </div>
+
+
+        <div class="profileActions">
+
+          <button
+            id="saveProfileBtn"
+            class="primaryBtn"
+          >
+            💾 Save Profile
+          </button>
+
+          <span
+            id="profileMsg"
+            class="msg"
+          ></span>
+
+        </div>
+
       </section>
+
+
+      <!-- =========================
+           LINKS
+      ========================== -->
+      <section class="linksBox">
+
+        <div class="sectionHead">
+
+          <div>
+            <h2>Your Links</h2>
+
+            <p class="muted">
+              Add and manage the links shown on your public page.
+            </p>
+          </div>
+
+          <button
+            id="addBtn"
+            class="primaryBtn"
+          >
+            ＋ Add Link
+          </button>
+
+        </div>
+
+
+        <!-- LINK LIST -->
+        <div
+          id="linkList"
+          class="linkList"
+        ></div>
+
+
+        <!-- EMPTY STATE -->
+        <div
+          id="emptyLinks"
+          class="emptyState"
+          hidden
+        >
+
+          <div class="emptyIcon">
+            🔗
+          </div>
+
+          <h3>
+            No links yet
+          </h3>
+
+          <p class="muted">
+            Add your first link to get started.
+          </p>
+
+          <button
+            id="emptyAddBtn"
+            class="secondary"
+          >
+            ＋ Add Your First Link
+          </button>
+
+        </div>
+
+      </section>
+
     </section>
+
   </main>
 
+
+  <!-- =========================
+       LINK EDITOR
+  ========================== -->
   <dialog id="editor">
-    <form method="dialog" id="linkForm" class="dialog">
-      <h2 id="editorTitle">Add Link</h2>
-      <input id="linkTitle" placeholder="Link name" required>
-      <input id="linkSubtitle" placeholder="Small description">
-      <input id="linkUrl" type="url" placeholder="https://..." required>
-      <input id="linkIcon" placeholder="Icon slug e.g. whatsapp, instagram, youtube" required>
-      <label class="switchRow"><input id="linkEnabled" type="checkbox" checked> Visible on public page</label>
-      <div class="actions">
-        <button type="button" class="secondary" id="cancelBtn">Cancel</button>
-        <button type="submit">Save</button>
+
+    <form
+      method="dialog"
+      id="linkForm"
+      class="dialog"
+    >
+
+      <div class="dialogHeader">
+
+        <div>
+          <h2 id="editorTitle">
+            Add Link
+          </h2>
+
+          <p class="muted">
+            Add the details for your link.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          id="closeEditorBtn"
+          class="iconBtn"
+          aria-label="Close"
+        >
+          ✕
+        </button>
+
       </div>
-      <p id="editMsg" class="msg"></p>
+
+
+      <!-- LINK TITLE -->
+      <div class="formGroup">
+
+        <label for="linkTitle">
+          Link Name
+        </label>
+
+        <input
+          id="linkTitle"
+          placeholder="e.g. Instagram"
+          required
+        >
+
+      </div>
+
+
+      <!-- LINK SUBTITLE -->
+      <div class="formGroup">
+
+        <label for="linkSubtitle">
+          Description
+        </label>
+
+        <input
+          id="linkSubtitle"
+          placeholder="Small description"
+        >
+
+      </div>
+
+
+      <!-- LINK URL -->
+      <div class="formGroup">
+
+        <label for="linkUrl">
+          Link URL
+        </label>
+
+        <input
+          id="linkUrl"
+          type="url"
+          placeholder="https://..."
+          required
+        >
+
+      </div>
+
+
+      <!-- ICON -->
+      <div class="formGroup">
+
+        <label for="linkIcon">
+          Icon
+        </label>
+
+        <input
+          id="linkIcon"
+          placeholder="e.g. whatsapp, instagram, youtube"
+          required
+        >
+
+        <small class="muted">
+          Enter the icon name/slug used by your public page.
+        </small>
+
+      </div>
+
+
+      <!-- VISIBILITY -->
+      <label class="switchRow">
+
+        <input
+          id="linkEnabled"
+          type="checkbox"
+          checked
+        >
+
+        <span>
+          Visible on public page
+        </span>
+
+      </label>
+
+
+      <!-- ACTIONS -->
+      <div class="actions">
+
+        <button
+          type="button"
+          class="secondary"
+          id="cancelBtn"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="primaryBtn"
+        >
+          💾 Save Link
+        </button>
+
+      </div>
+
+
+      <p
+        id="editMsg"
+        class="msg"
+      ></p>
+
     </form>
+
   </dialog>
 
-  <script type="module" src="admin.js"></script>
+
+  <!-- =========================
+       JAVASCRIPT
+  ========================== -->
+  <script
+    type="module"
+    src="admin.js"
+  ></script>
+
 </body>
 </html>
-
