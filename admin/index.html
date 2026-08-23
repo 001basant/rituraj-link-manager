@@ -34,7 +34,6 @@
 
       </div>
 
-
       <div class="formGroup">
 
         <label for="email">
@@ -49,7 +48,6 @@
         >
 
       </div>
-
 
       <div class="formGroup">
 
@@ -79,7 +77,6 @@
 
       </div>
 
-
       <button
         id="loginBtn"
         class="primaryBtn"
@@ -87,14 +84,12 @@
         Login
       </button>
 
-
       <p
         id="loginMsg"
         class="msg"
       ></p>
 
     </section>
-
 
 
     <!-- =========================
@@ -130,7 +125,6 @@
           </div>
 
         </div>
-
 
         <button
           id="logoutBtn"
@@ -213,7 +207,6 @@
       </section>
 
 
-
       <!-- =========================
            PROFILE
       ========================== -->
@@ -235,7 +228,6 @@
           </div>
 
         </div>
-
 
 
         <!-- PROFILE PREVIEW -->
@@ -276,7 +268,6 @@
         </div>
 
 
-
         <!-- PROFILE FORM -->
 
         <div class="grid">
@@ -298,7 +289,6 @@
           </div>
 
 
-
           <!-- USERNAME -->
 
           <div class="formGroup">
@@ -316,10 +306,7 @@
           </div>
 
 
-
-          <!-- =========================
-               PHOTO UPLOAD
-          ========================== -->
+          <!-- PROFILE PHOTO -->
 
           <div class="formGroup fullWidth">
 
@@ -329,8 +316,6 @@
 
 
             <div class="photoUploadBox">
-
-              <!-- UPLOAD PREVIEW -->
 
               <div class="photoUploadPreview">
 
@@ -347,8 +332,6 @@
 
               </div>
 
-
-              <!-- UPLOAD AREA -->
 
               <div class="photoUploadContent">
 
@@ -387,9 +370,6 @@
             </div>
 
 
-
-            <!-- IMAGE URL -->
-
             <label for="profileAvatar">
               Image URL
             </label>
@@ -405,7 +385,6 @@
             </small>
 
           </div>
-
 
 
           <!-- BIO -->
@@ -427,7 +406,6 @@
         </div>
 
 
-
         <!-- SAVE PROFILE -->
 
         <div class="profileActions">
@@ -439,7 +417,6 @@
             💾 Save Profile
           </button>
 
-
           <span
             id="profileMsg"
             class="msg"
@@ -448,7 +425,6 @@
         </div>
 
       </section>
-
 
 
       <!-- =========================
@@ -526,7 +502,6 @@
   </main>
 
 
-
   <!-- =========================
        LINK EDITOR
   ========================== -->
@@ -566,7 +541,6 @@
       </div>
 
 
-
       <!-- LINK NAME -->
 
       <div class="formGroup">
@@ -585,7 +559,6 @@
       </div>
 
 
-
       <!-- DESCRIPTION -->
 
       <div class="formGroup">
@@ -601,7 +574,6 @@
         >
 
       </div>
-
 
 
       <!-- URL -->
@@ -622,8 +594,9 @@
       </div>
 
 
-
-      <!-- ICON -->
+      <!-- =========================
+           ICON
+      ========================== -->
 
       <div class="formGroup">
 
@@ -634,16 +607,114 @@
         <input
           id="linkIcon"
           type="text"
-          placeholder="e.g. whatsapp, instagram, youtube"
-          required
+          placeholder="e.g. whatsapp, instagram, telegram"
         >
 
         <small class="muted">
-          Example: instagram, whatsapp, youtube, github
+          For normal icons, enter the icon name.
         </small>
 
       </div>
 
+
+      <!-- CUSTOM ICON UPLOAD -->
+
+      <div class="formGroup">
+
+        <label>
+          Custom Icon Image
+        </label>
+
+
+        <div class="customIconUpload">
+
+          <!-- PREVIEW -->
+
+          <div class="customIconPreview">
+
+            <img
+              id="linkIconPreview"
+              src=""
+              alt="Icon preview"
+              hidden
+            >
+
+            <span id="linkIconPlaceholder">
+              🖼️
+            </span>
+
+          </div>
+
+
+          <!-- UPLOAD -->
+
+          <div class="customIconContent">
+
+            <strong>
+              Upload Custom Icon
+            </strong>
+
+            <p class="muted">
+              PNG, JPG or WebP • Maximum 2 MB
+            </p>
+
+
+            <label
+              for="linkIconFile"
+              class="uploadBtn"
+            >
+              🖼️ Choose Icon
+            </label>
+
+
+            <input
+              id="linkIconFile"
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              hidden
+            >
+
+
+            <button
+              type="button"
+              id="removeIconBtn"
+              class="secondary"
+              hidden
+            >
+              Remove Custom Icon
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <small class="muted">
+          Custom icon upload karne par normal icon name ki jagah uploaded image use hogi.
+        </small>
+
+      </div>
+
+
+      <!-- ICON IMAGE URL -->
+
+      <div class="formGroup">
+
+        <label for="linkIconUrl">
+          Or Icon Image URL
+        </label>
+
+        <input
+          id="linkIconUrl"
+          type="url"
+          placeholder="https://example.com/icon.png"
+        >
+
+        <small class="muted">
+          Direct image URL bhi use kar sakte ho.
+        </small>
+
+      </div>
 
 
       <!-- VISIBILITY -->
@@ -661,7 +732,6 @@
         </span>
 
       </label>
-
 
 
       <!-- ACTIONS -->
@@ -697,10 +767,160 @@
   </dialog>
 
 
-
   <!-- =========================
        JAVASCRIPT
   ========================== -->
+
+  <script>
+
+    /*
+      CUSTOM ICON UPLOAD
+      ------------------
+      Selected image ko temporary Data URL
+      mein convert karta hai.
+    */
+
+    const iconFile = document.getElementById("linkIconFile");
+    const iconPreview = document.getElementById("linkIconPreview");
+    const iconPlaceholder = document.getElementById("linkIconPlaceholder");
+    const iconUrl = document.getElementById("linkIconUrl");
+    const iconName = document.getElementById("linkIcon");
+    const removeIconBtn = document.getElementById("removeIconBtn");
+
+
+    if (iconFile) {
+
+      iconFile.addEventListener("change", function () {
+
+        const file = this.files[0];
+
+        if (!file) {
+          return;
+        }
+
+
+        // Maximum 2 MB
+        if (file.size > 2 * 1024 * 1024) {
+
+          alert("Icon image 2 MB se chhoti honi chahiye.");
+
+          this.value = "";
+
+          return;
+        }
+
+
+        // Check image type
+        if (!file.type.startsWith("image/")) {
+
+          alert("Sirf image file select karo.");
+
+          this.value = "";
+
+          return;
+        }
+
+
+        const reader = new FileReader();
+
+
+        reader.onload = function (event) {
+
+          const imageData = event.target.result;
+
+
+          // Preview
+          iconPreview.src = imageData;
+          iconPreview.hidden = false;
+
+          iconPlaceholder.hidden = true;
+
+          removeIconBtn.hidden = false;
+
+
+          /*
+            IMPORTANT:
+
+            Existing admin.js agar linkIcon.value
+            save karta hai, to image automatically
+            us field mein save ho jayegi.
+          */
+
+          iconName.value = imageData;
+
+
+          // URL field clear
+          iconUrl.value = "";
+
+        };
+
+
+        reader.readAsDataURL(file);
+
+      });
+
+    }
+
+
+    // Remove custom icon
+
+    if (removeIconBtn) {
+
+      removeIconBtn.addEventListener("click", function () {
+
+        iconFile.value = "";
+
+        iconName.value = "";
+
+        iconUrl.value = "";
+
+        iconPreview.src = "";
+
+        iconPreview.hidden = true;
+
+        iconPlaceholder.hidden = false;
+
+        removeIconBtn.hidden = true;
+
+      });
+
+    }
+
+
+    // Icon URL preview
+
+    if (iconUrl) {
+
+      iconUrl.addEventListener("input", function () {
+
+        const url = this.value.trim();
+
+        if (!url) {
+          return;
+        }
+
+
+        // Custom upload ko remove
+        iconFile.value = "";
+
+        iconName.value = url;
+
+
+        iconPreview.src = url;
+        iconPreview.hidden = false;
+
+        iconPlaceholder.hidden = true;
+
+        removeIconBtn.hidden = false;
+
+      });
+
+    }
+
+  </script>
+
+
+  <!-- MAIN ADMIN JAVASCRIPT -->
 
   <script
     type="module"
