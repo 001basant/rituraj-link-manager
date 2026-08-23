@@ -14,35 +14,51 @@
 
   <main class="wrap">
 
-    <!-- =========================
+    <!-- =================================
          LOGIN PANEL
-    ========================== -->
+    ================================== -->
+
     <section id="loginPanel" class="panel">
 
       <div class="loginHeader">
-        <div class="adminIcon">🔐</div>
+
+        <div class="adminIcon">
+          🔐
+        </div>
 
         <h1>Admin Login</h1>
 
         <p class="muted">
           Login to manage your Link Manager.
         </p>
+
       </div>
 
+
       <div class="formGroup">
-        <label for="email">Email</label>
+
+        <label for="email">
+          Email
+        </label>
+
         <input
           id="email"
           type="email"
           placeholder="Enter admin email"
           autocomplete="email"
         >
+
       </div>
 
+
       <div class="formGroup">
-        <label for="password">Password</label>
+
+        <label for="password">
+          Password
+        </label>
 
         <div class="passwordBox">
+
           <input
             id="password"
             type="password"
@@ -58,24 +74,41 @@
           >
             👁️
           </button>
+
         </div>
+
       </div>
 
-      <button id="loginBtn" class="primaryBtn">
+
+      <button
+        id="loginBtn"
+        class="primaryBtn"
+      >
         Login
       </button>
 
-      <p id="loginMsg" class="msg"></p>
+
+      <p
+        id="loginMsg"
+        class="msg"
+      ></p>
 
     </section>
 
 
-    <!-- =========================
-         ADMIN APP
-    ========================== -->
-    <section id="appPanel" class="panel" hidden>
+
+    <!-- =================================
+         ADMIN PANEL
+    ================================== -->
+
+    <section
+      id="appPanel"
+      class="panel"
+      hidden
+    >
 
       <!-- TOP BAR -->
+
       <header class="topbar">
 
         <div class="brandArea">
@@ -85,31 +118,45 @@
           </div>
 
           <div>
-            <h1>Link Manager</h1>
+
+            <h1>
+              Link Manager
+            </h1>
 
             <p class="muted">
               Manage your public profile and links.
             </p>
+
           </div>
 
         </div>
 
-        <button id="logoutBtn" class="secondary">
+
+        <button
+          id="logoutBtn"
+          class="secondary"
+        >
           Logout
         </button>
 
       </header>
 
 
-      <!-- =========================
-           DASHBOARD
-      ========================== -->
+
+      <!-- =================================
+           DASHBOARD STATS
+      ================================== -->
+
       <section class="dashboard">
 
         <div class="statCard">
-          <span class="statIcon">🔗</span>
+
+          <span class="statIcon">
+            🔗
+          </span>
 
           <div>
+
             <span class="statLabel">
               Total Links
             </span>
@@ -117,14 +164,20 @@
             <strong id="totalLinks">
               0
             </strong>
+
           </div>
+
         </div>
 
 
         <div class="statCard">
-          <span class="statIcon">👁️</span>
+
+          <span class="statIcon">
+            👁️
+          </span>
 
           <div>
+
             <span class="statLabel">
               Visible Links
             </span>
@@ -132,14 +185,20 @@
             <strong id="visibleLinks">
               0
             </strong>
+
           </div>
+
         </div>
 
 
         <div class="statCard">
-          <span class="statIcon">🙈</span>
+
+          <span class="statIcon">
+            🙈
+          </span>
 
           <div>
+
             <span class="statLabel">
               Hidden Links
             </span>
@@ -147,31 +206,45 @@
             <strong id="hiddenLinks">
               0
             </strong>
+
           </div>
+
         </div>
 
       </section>
 
 
-      <!-- =========================
-           PROFILE
-      ========================== -->
+
+      <!-- =================================
+           PROFILE SECTION
+      ================================== -->
+
       <section class="profileBox">
 
         <div class="sectionHead">
+
           <div>
-            <h2>Profile</h2>
+
+            <h2>
+              Profile
+            </h2>
 
             <p class="muted">
               This information appears on your public page.
             </p>
+
           </div>
+
         </div>
 
+
+
+        <!-- PROFILE PREVIEW -->
 
         <div class="profilePreview">
 
           <div class="avatarPreview">
+
             <img
               id="profileAvatarPreview"
               src=""
@@ -182,50 +255,143 @@
             <span id="avatarPlaceholder">
               👤
             </span>
+
           </div>
 
+
           <div>
+
             <strong id="profilePreviewName">
               Your Name
             </strong>
 
-            <span id="profilePreviewUsername" class="muted">
+            <span
+              id="profilePreviewUsername"
+              class="muted"
+            >
               @username
             </span>
+
           </div>
 
         </div>
 
 
+
+        <!-- PROFILE FORM -->
+
         <div class="grid">
 
+          <!-- DISPLAY NAME -->
+
           <div class="formGroup">
+
             <label for="profileName">
               Display Name
             </label>
 
             <input
               id="profileName"
+              type="text"
               placeholder="Your name"
             >
+
           </div>
 
 
+
+          <!-- USERNAME -->
+
           <div class="formGroup">
+
             <label for="profileUsername">
               Username
             </label>
 
             <input
               id="profileUsername"
+              type="text"
               placeholder="@username"
             >
+
           </div>
 
 
+
+          <!-- =================================
+               PROFILE PHOTO UPLOAD
+          ================================== -->
+
           <div class="formGroup fullWidth">
+
+            <label>
+              Profile Photo
+            </label>
+
+
+            <div class="photoUploadBox">
+
+              <!-- PHOTO PREVIEW -->
+
+              <div class="photoUploadPreview">
+
+                <img
+                  id="uploadPhotoPreview"
+                  src=""
+                  alt="Selected photo"
+                  hidden
+                >
+
+                <span id="uploadPhotoPlaceholder">
+                  📷
+                </span>
+
+              </div>
+
+
+              <!-- UPLOAD CONTENT -->
+
+              <div class="photoUploadContent">
+
+                <strong>
+                  Upload Profile Photo
+                </strong>
+
+                <p class="muted">
+                  JPG, PNG or WebP • Maximum 5 MB
+                </p>
+
+
+                <label
+                  for="profilePhotoFile"
+                  class="uploadBtn"
+                >
+                  📷 Choose Photo
+                </label>
+
+
+                <input
+                  id="profilePhotoFile"
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  hidden
+                >
+
+
+                <p
+                  id="uploadMsg"
+                  class="msg"
+                ></p>
+
+              </div>
+
+            </div>
+
+
+            <!-- IMAGE URL -->
+
             <label for="profileAvatar">
-              Profile Photo URL
+              Image URL
             </label>
 
             <input
@@ -233,10 +399,19 @@
               type="url"
               placeholder="https://example.com/photo.jpg"
             >
+
+            <small class="muted">
+              Upload a photo above or paste a direct image URL.
+            </small>
+
           </div>
 
 
+
+          <!-- BIO -->
+
           <div class="formGroup fullWidth">
+
             <label for="profileBio">
               Bio
             </label>
@@ -246,10 +421,14 @@
               placeholder="Write a short bio..."
               rows="3"
             ></textarea>
+
           </div>
 
         </div>
 
+
+
+        <!-- PROFILE SAVE -->
 
         <div class="profileActions">
 
@@ -259,6 +438,7 @@
           >
             💾 Save Profile
           </button>
+
 
           <span
             id="profileMsg"
@@ -270,20 +450,27 @@
       </section>
 
 
-      <!-- =========================
-           LINKS
-      ========================== -->
+
+      <!-- =================================
+           LINKS SECTION
+      ================================== -->
+
       <section class="linksBox">
 
         <div class="sectionHead">
 
           <div>
-            <h2>Your Links</h2>
+
+            <h2>
+              Your Links
+            </h2>
 
             <p class="muted">
               Add and manage the links shown on your public page.
             </p>
+
           </div>
+
 
           <button
             id="addBtn"
@@ -295,14 +482,18 @@
         </div>
 
 
+
         <!-- LINK LIST -->
+
         <div
           id="linkList"
           class="linkList"
         ></div>
 
 
+
         <!-- EMPTY STATE -->
+
         <div
           id="emptyLinks"
           class="emptyState"
@@ -337,9 +528,11 @@
   </main>
 
 
-  <!-- =========================
+
+  <!-- =================================
        LINK EDITOR
-  ========================== -->
+  ================================== -->
+
   <dialog id="editor">
 
     <form
@@ -348,9 +541,12 @@
       class="dialog"
     >
 
+      <!-- HEADER -->
+
       <div class="dialogHeader">
 
         <div>
+
           <h2 id="editorTitle">
             Add Link
           </h2>
@@ -358,7 +554,9 @@
           <p class="muted">
             Add the details for your link.
           </p>
+
         </div>
+
 
         <button
           type="button"
@@ -372,7 +570,9 @@
       </div>
 
 
-      <!-- LINK TITLE -->
+
+      <!-- LINK NAME -->
+
       <div class="formGroup">
 
         <label for="linkTitle">
@@ -381,6 +581,7 @@
 
         <input
           id="linkTitle"
+          type="text"
           placeholder="e.g. Instagram"
           required
         >
@@ -388,7 +589,9 @@
       </div>
 
 
-      <!-- LINK SUBTITLE -->
+
+      <!-- DESCRIPTION -->
+
       <div class="formGroup">
 
         <label for="linkSubtitle">
@@ -397,13 +600,16 @@
 
         <input
           id="linkSubtitle"
+          type="text"
           placeholder="Small description"
         >
 
       </div>
 
 
-      <!-- LINK URL -->
+
+      <!-- URL -->
+
       <div class="formGroup">
 
         <label for="linkUrl">
@@ -420,7 +626,9 @@
       </div>
 
 
+
       <!-- ICON -->
+
       <div class="formGroup">
 
         <label for="linkIcon">
@@ -429,18 +637,21 @@
 
         <input
           id="linkIcon"
+          type="text"
           placeholder="e.g. whatsapp, instagram, youtube"
           required
         >
 
         <small class="muted">
-          Enter the icon name/slug used by your public page.
+          Example: instagram, whatsapp, youtube, github
         </small>
 
       </div>
 
 
+
       <!-- VISIBILITY -->
+
       <label class="switchRow">
 
         <input
@@ -456,7 +667,9 @@
       </label>
 
 
+
       <!-- ACTIONS -->
+
       <div class="actions">
 
         <button
@@ -467,6 +680,7 @@
           Cancel
         </button>
 
+
         <button
           type="submit"
           class="primaryBtn"
@@ -475,6 +689,7 @@
         </button>
 
       </div>
+
 
 
       <p
@@ -487,9 +702,11 @@
   </dialog>
 
 
-  <!-- =========================
+
+  <!-- =================================
        JAVASCRIPT
-  ========================== -->
+  ================================== -->
+
   <script
     type="module"
     src="admin.js"
