@@ -15,6 +15,7 @@ const logoutBtn = document.getElementById("logoutBtn");
 
 const loginMsg = document.getElementById("loginMsg");
 const profileMsg = document.getElementById("profileMsg");
+const uploadMsg = document.getElementById("uploadMsg");
 const editMsg = document.getElementById("editMsg");
 
 const linkList = document.getElementById("linkList");
@@ -28,9 +29,14 @@ const addBtn = document.getElementById("addBtn");
 const cancelBtn = document.getElementById("cancelBtn");
 const closeEditorBtn = document.getElementById("closeEditorBtn");
 
-const togglePassword = document.getElementById("togglePassword");
+const togglePassword =
+  document.getElementById("togglePassword");
 
-const saveProfileBtn = document.getElementById("saveProfileBtn");
+const saveProfileBtn =
+  document.getElementById("saveProfileBtn");
+
+const profilePhotoFile =
+  document.getElementById("profilePhotoFile");
 
 let editingId = null;
 let currentLinks = [];
@@ -52,7 +58,7 @@ function showMsg(element, text, success = false) {
 
 
 /* =========================================
-   LOGIN / SESSION
+   SESSION
 ========================================= */
 
 async function refreshSession() {
@@ -90,17 +96,21 @@ async function login() {
   const password = passwordInput.value;
 
   if (!email || !password) {
-    showMsg(loginMsg, "Please enter email and password.");
+    showMsg(
+      loginMsg,
+      "Please enter email and password."
+    );
     return;
   }
 
   loginBtn.disabled = true;
   loginBtn.textContent = "Logging in...";
 
-  const { error } = await supabase.auth.signInWithPassword({
-    email,
-    password
-  });
+  const { error } =
+    await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
 
   loginBtn.disabled = false;
   loginBtn.textContent = "Login";
@@ -119,7 +129,7 @@ loginBtn.addEventListener("click", login);
 
 
 /* =========================================
-   LOGIN WITH ENTER KEY
+   ENTER KEY LOGIN
 ========================================= */
 
 [emailInput, passwordInput].forEach((input) => {
@@ -146,13 +156,6 @@ if (togglePassword) {
 
     togglePassword.textContent =
       isPassword ? "🙈" : "👁️";
-
-    togglePassword.setAttribute(
-      "aria-label",
-      isPassword
-        ? "Hide password"
-        : "Show password"
-    );
   });
 }
 
@@ -165,7 +168,8 @@ logoutBtn.addEventListener("click", async () => {
   logoutBtn.disabled = true;
   logoutBtn.textContent = "Logging out...";
 
-  const { error } = await supabase.auth.signOut();
+  const { error } =
+    await supabase.auth.signOut();
 
   logoutBtn.disabled = false;
   logoutBtn.textContent = "Logout";
@@ -180,7 +184,7 @@ logoutBtn.addEventListener("click", async () => {
 
 
 /* =========================================
-   PROFILE
+   LOAD PROFILE
 ========================================= */
 
 async function loadProfile() {
@@ -225,35 +229,55 @@ async function loadProfile() {
 
 function updateProfilePreview() {
   const name =
-    document.getElementById("profileName").value.trim();
+    document
+      .getElementById("profileName")
+      .value
+      .trim();
 
   const username =
-    document.getElementById("profileUsername").value.trim();
+    document
+      .getElementById("profileUsername")
+      .value
+      .trim();
 
   const avatar =
-    document.getElementById("profileAvatar").value.trim();
+    document
+      .getElementById("profileAvatar")
+      .value
+      .trim();
 
   const previewName =
-    document.getElementById("profilePreviewName");
+    document.getElementById(
+      "profilePreviewName"
+    );
 
   const previewUsername =
-    document.getElementById("profilePreviewUsername");
+    document.getElementById(
+      "profilePreviewUsername"
+    );
 
   const avatarImage =
-    document.getElementById("profileAvatarPreview");
+    document.getElementById(
+      "profileAvatarPreview"
+    );
 
   const avatarPlaceholder =
-    document.getElementById("avatarPlaceholder");
+    document.getElementById(
+      "avatarPlaceholder"
+    );
 
   previewName.textContent =
     name || "Your Name";
 
   previewUsername.textContent =
     username
-      ? (username.startsWith("@")
-          ? username
-          : `@${username}`)
+      ? (
+          username.startsWith("@")
+            ? username
+            : `@${username}`
+        )
       : "@username";
+
 
   if (avatar) {
     avatarImage.src = avatar;
@@ -283,69 +307,269 @@ function updateProfilePreview() {
 ].forEach((id) => {
   document
     .getElementById(id)
-    .addEventListener("input", updateProfilePreview);
+    .addEventListener(
+      "input",
+      updateProfilePreview
+    );
 });
+
+
+/* =========================================
+   PHOTO UPLOAD
+========================================= */
+
+if (profilePhotoFile) {
+  profilePhotoFile.addEventListener(
+    "change",
+    async () => {
+      const file =
+        profilePhotoFile.files?.[0];
+
+      if (!file) return;
+
+      await uploadProfilePhoto(file);
+    }
+  );
+}
+
+
+async function uploadProfilePhoto(file) {
+
+  showMsg(uploadMsg, "");
+
+  /* Allowed formats */
+
+  const allowedTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/webp"
+  ];
+
+  if (!allowedTypes.includes(file.type)) {
+
+    showMsg(
+      uploadMsg,
+      "Only JPG, PNG or WebP images are allowed."
+    );
+
+    profilePhotoFile.value = "";
+
+    return;
+  }
+
+
+  /* Maximum 5 MB */
+
+  const maxSize =
+    5 * 1024 * 1024;
+
+  if (file.size > maxSize) {
+
+    showMsg(
+      uploadMsg,
+      "Image must be smaller than 5 MB."
+    );
+
+    profilePhotoFile.value = "";
+
+    return;
+  }
+
+
+  /* Local preview */
+
+  const localPreview =
+    URL.createObjectURL(file);
+
+  const uploadPreview =
+    document.getElementById(
+      "uploadPhotoPreview"
+    );
+
+  const uploadPlaceholder =
+    document.getElementById(
+      "uploadPhotoPlaceholder"
+    );
+
+  uploadPreview.src =
+    localPreview;
+
+  uploadPreview.hidden = false;
+
+  uploadPlaceholder.hidden = true;
+
+
+  showMsg(
+    uploadMsg,
+    "Uploading photo..."
+  );
+
+
+  /* File extension */
+
+  const extension =
+    file.name
+      .split(".")
+      .pop()
+      .toLowerCase();
+
+
+  /* Unique filename */
+
+  const fileName =
+    `profile-${Date.now()}.${extension}`;
+
+
+  const filePath =
+    `avatars/${fileName}`;
+
+
+  /* Upload */
+
+  const {
+    error: uploadError
+  } = await supabase.storage
+    .from("profile-images")
+    .upload(
+      filePath,
+      file,
+      {
+        cacheControl: "3600",
+        upsert: false,
+        contentType: file.type
+      }
+    );
+
+
+  if (uploadError) {
+
+    console.error(uploadError);
+
+    showMsg(
+      uploadMsg,
+      uploadError.message
+    );
+
+    URL.revokeObjectURL(localPreview);
+
+    return;
+  }
+
+
+  /* Get public URL */
+
+  const {
+    data: publicUrlData
+  } = supabase.storage
+    .from("profile-images")
+    .getPublicUrl(filePath);
+
+
+  const publicUrl =
+    publicUrlData.publicUrl;
+
+
+  /* Put URL in profile URL field */
+
+  document.getElementById(
+    "profileAvatar"
+  ).value = publicUrl;
+
+
+  /* Update main profile preview */
+
+  updateProfilePreview();
+
+
+  showMsg(
+    uploadMsg,
+    "Photo uploaded. Now click Save Profile.",
+    true
+  );
+
+
+  URL.revokeObjectURL(localPreview);
+}
 
 
 /* =========================================
    SAVE PROFILE
 ========================================= */
 
-saveProfileBtn.addEventListener("click", async () => {
-  showMsg(profileMsg, "");
+saveProfileBtn.addEventListener(
+  "click",
+  async () => {
 
-  const payload = {
-    id: 1,
+    showMsg(profileMsg, "");
 
-    display_name:
-      document
-        .getElementById("profileName")
-        .value
-        .trim(),
+    const payload = {
+      id: 1,
 
-    username:
-      document
-        .getElementById("profileUsername")
-        .value
-        .trim(),
+      display_name:
+        document
+          .getElementById("profileName")
+          .value
+          .trim(),
 
-    avatar_url:
-      document
-        .getElementById("profileAvatar")
-        .value
-        .trim(),
+      username:
+        document
+          .getElementById("profileUsername")
+          .value
+          .trim(),
 
-    bio:
-      document
-        .getElementById("profileBio")
-        .value
-        .trim()
-  };
+      avatar_url:
+        document
+          .getElementById("profileAvatar")
+          .value
+          .trim(),
 
-  saveProfileBtn.disabled = true;
-  saveProfileBtn.textContent = "Saving...";
+      bio:
+        document
+          .getElementById("profileBio")
+          .value
+          .trim()
+    };
 
-  const { error } =
-    await supabase
-      .from("profile")
-      .upsert(payload);
 
-  saveProfileBtn.disabled = false;
-  saveProfileBtn.textContent = "💾 Save Profile";
+    saveProfileBtn.disabled = true;
 
-  if (error) {
-    showMsg(profileMsg, error.message);
-    return;
+    saveProfileBtn.textContent =
+      "Saving...";
+
+
+    const { error } =
+      await supabase
+        .from("profile")
+        .upsert(payload);
+
+
+    saveProfileBtn.disabled = false;
+
+    saveProfileBtn.textContent =
+      "💾 Save Profile";
+
+
+    if (error) {
+
+      showMsg(
+        profileMsg,
+        error.message
+      );
+
+      return;
+    }
+
+
+    updateProfilePreview();
+
+
+    showMsg(
+      profileMsg,
+      "Profile saved successfully.",
+      true
+    );
   }
-
-  updateProfilePreview();
-
-  showMsg(
-    profileMsg,
-    "Profile saved successfully.",
-    true
-  );
-});
+);
 
 
 /* =========================================
@@ -353,6 +577,7 @@ saveProfileBtn.addEventListener("click", async () => {
 ========================================= */
 
 async function loadLinks() {
+
   const {
     data,
     error
@@ -363,12 +588,20 @@ async function loadLinks() {
       ascending: true
     });
 
+
   if (error) {
-    showMsg(loginMsg, error.message);
+    showMsg(
+      loginMsg,
+      error.message
+    );
+
     return;
   }
 
-  currentLinks = data || [];
+
+  currentLinks =
+    data || [];
+
 
   renderLinks();
   updateStats();
@@ -380,54 +613,77 @@ async function loadLinks() {
 ========================================= */
 
 function renderLinks() {
+
   linkList.replaceChildren();
 
+
   if (currentLinks.length === 0) {
+
     emptyLinks.hidden = false;
+
     return;
   }
 
+
   emptyLinks.hidden = true;
 
-  currentLinks.forEach((item, index) => {
-    linkList.appendChild(
-      makeRow(item, index)
-    );
-  });
+
+  currentLinks.forEach(
+    (item, index) => {
+
+      linkList.appendChild(
+        makeRow(item, index)
+      );
+
+    }
+  );
 }
 
 
 /* =========================================
-   CREATE LINK ROW
+   LINK ROW
 ========================================= */
 
 function makeRow(item, index) {
+
   const row =
     document.createElement("div");
 
-  row.className = "linkItem";
+  row.className =
+    "linkItem";
+
 
   if (!item.enabled) {
-    row.classList.add("hiddenLink");
+    row.classList.add(
+      "hiddenLink"
+    );
   }
+
 
   const icon =
     document.createElement("div");
 
-  icon.className = "linkIcon";
+  icon.className =
+    "linkIcon";
+
   icon.textContent =
     getIconEmoji(item.icon);
+
 
   const info =
     document.createElement("div");
 
-  info.className = "linkInfo";
+  info.className =
+    "linkInfo";
+
 
   const title =
     document.createElement("strong");
 
   title.textContent =
-    item.title || "Untitled Link";
+    item.title ||
+    "Untitled Link";
+
 
   const subtitle =
     document.createElement("span");
@@ -437,19 +693,19 @@ function makeRow(item, index) {
     item.url ||
     "No description";
 
+
   info.appendChild(title);
   info.appendChild(subtitle);
 
 
-  /* ACTIONS */
-
   const actions =
     document.createElement("div");
 
-  actions.className = "linkActions";
+  actions.className =
+    "linkActions";
 
 
-  /* MOVE UP */
+  /* UP */
 
   const upBtn =
     document.createElement("button");
@@ -461,13 +717,11 @@ function makeRow(item, index) {
   upBtn.disabled =
     index === 0;
 
-  upBtn.addEventListener(
-    "click",
-    () => moveLink(index, -1)
-  );
+  upBtn.onclick =
+    () => moveLink(index, -1);
 
 
-  /* MOVE DOWN */
+  /* DOWN */
 
   const downBtn =
     document.createElement("button");
@@ -479,10 +733,8 @@ function makeRow(item, index) {
   downBtn.disabled =
     index === currentLinks.length - 1;
 
-  downBtn.addEventListener(
-    "click",
-    () => moveLink(index, 1)
-  );
+  downBtn.onclick =
+    () => moveLink(index, 1);
 
 
   /* EDIT */
@@ -491,16 +743,14 @@ function makeRow(item, index) {
     document.createElement("button");
 
   editBtn.type = "button";
-  editBtn.title = "Edit link";
+  editBtn.title = "Edit";
   editBtn.textContent = "✏️";
 
-  editBtn.addEventListener(
-    "click",
-    () => openEditor(item)
-  );
+  editBtn.onclick =
+    () => openEditor(item);
 
 
-  /* SHOW / HIDE */
+  /* TOGGLE */
 
   const toggleBtn =
     document.createElement("button");
@@ -509,18 +759,16 @@ function makeRow(item, index) {
 
   toggleBtn.title =
     item.enabled
-      ? "Hide link"
-      : "Show link";
+      ? "Hide"
+      : "Show";
 
   toggleBtn.textContent =
     item.enabled
       ? "👁️"
       : "🙈";
 
-  toggleBtn.addEventListener(
-    "click",
-    () => toggleLink(item)
-  );
+  toggleBtn.onclick =
+    () => toggleLink(item);
 
 
   /* DELETE */
@@ -529,13 +777,11 @@ function makeRow(item, index) {
     document.createElement("button");
 
   deleteBtn.type = "button";
-  deleteBtn.title = "Delete link";
+  deleteBtn.title = "Delete";
   deleteBtn.textContent = "🗑️";
 
-  deleteBtn.addEventListener(
-    "click",
-    () => deleteLink(item.id)
-  );
+  deleteBtn.onclick =
+    () => deleteLink(item.id);
 
 
   actions.appendChild(upBtn);
@@ -544,20 +790,24 @@ function makeRow(item, index) {
   actions.appendChild(toggleBtn);
   actions.appendChild(deleteBtn);
 
+
   row.appendChild(icon);
   row.appendChild(info);
   row.appendChild(actions);
+
 
   return row;
 }
 
 
 /* =========================================
-   ICON HELPER
+   ICONS
 ========================================= */
 
 function getIconEmoji(icon) {
+
   const icons = {
+
     instagram: "📸",
     whatsapp: "💬",
     youtube: "▶️",
@@ -574,39 +824,49 @@ function getIconEmoji(icon) {
     discord: "🎮",
     spotify: "🎵",
     twitch: "🎮"
+
   };
 
-  return icons[
-    String(icon || "")
-      .toLowerCase()
-      .trim()
-  ] || "🔗";
+
+  return (
+    icons[
+      String(icon || "")
+        .toLowerCase()
+        .trim()
+    ] || "🔗"
+  );
 }
 
 
 /* =========================================
-   DASHBOARD STATS
+   STATS
 ========================================= */
 
 function updateStats() {
+
   const total =
     currentLinks.length;
 
+
   const visible =
     currentLinks.filter(
-      (item) => item.enabled
+      item => item.enabled
     ).length;
+
 
   const hidden =
     total - visible;
+
 
   document.getElementById(
     "totalLinks"
   ).textContent = total;
 
+
   document.getElementById(
     "visibleLinks"
   ).textContent = visible;
+
 
   document.getElementById(
     "hiddenLinks"
@@ -619,21 +879,23 @@ function updateStats() {
 ========================================= */
 
 async function toggleLink(item) {
-  const newValue =
-    !item.enabled;
 
   const { error } =
     await supabase
       .from("links")
       .update({
-        enabled: newValue
+        enabled: !item.enabled
       })
       .eq("id", item.id);
 
+
   if (error) {
+
     alert(error.message);
+
     return;
   }
+
 
   await loadLinks();
 }
@@ -644,12 +906,15 @@ async function toggleLink(item) {
 ========================================= */
 
 async function deleteLink(id) {
-  const confirmed =
-    confirm(
-      "Are you sure you want to delete this link?"
-    );
 
-  if (!confirmed) return;
+  if (
+    !confirm(
+      "Are you sure you want to delete this link?"
+    )
+  ) {
+    return;
+  }
+
 
   const { error } =
     await supabase
@@ -657,10 +922,14 @@ async function deleteLink(id) {
       .delete()
       .eq("id", id);
 
+
   if (error) {
+
     alert(error.message);
+
     return;
   }
+
 
   await loadLinks();
 }
@@ -670,9 +939,14 @@ async function deleteLink(id) {
    MOVE LINK
 ========================================= */
 
-async function moveLink(index, direction) {
+async function moveLink(
+  index,
+  direction
+) {
+
   const newIndex =
     index + direction;
+
 
   if (
     newIndex < 0 ||
@@ -681,11 +955,13 @@ async function moveLink(index, direction) {
     return;
   }
 
+
   const current =
     currentLinks[index];
 
   const target =
     currentLinks[newIndex];
+
 
   const currentOrder =
     current.sort_order;
@@ -693,8 +969,6 @@ async function moveLink(index, direction) {
   const targetOrder =
     target.sort_order;
 
-
-  /* Swap sort_order */
 
   const firstUpdate =
     await supabase
@@ -704,8 +978,13 @@ async function moveLink(index, direction) {
       })
       .eq("id", current.id);
 
+
   if (firstUpdate.error) {
-    alert(firstUpdate.error.message);
+
+    alert(
+      firstUpdate.error.message
+    );
+
     return;
   }
 
@@ -718,10 +997,16 @@ async function moveLink(index, direction) {
       })
       .eq("id", target.id);
 
+
   if (secondUpdate.error) {
-    alert(secondUpdate.error.message);
+
+    alert(
+      secondUpdate.error.message
+    );
+
     return;
   }
+
 
   await loadLinks();
 }
@@ -732,8 +1017,10 @@ async function moveLink(index, direction) {
 ========================================= */
 
 function openEditor(item = null) {
+
   editingId =
     item?.id ?? null;
+
 
   document.getElementById(
     "editorTitle"
@@ -742,46 +1029,46 @@ function openEditor(item = null) {
       ? "Edit Link"
       : "Add Link";
 
+
   document.getElementById(
     "linkTitle"
   ).value =
     item?.title || "";
+
 
   document.getElementById(
     "linkSubtitle"
   ).value =
     item?.subtitle || "";
 
+
   document.getElementById(
     "linkUrl"
   ).value =
     item?.url || "";
+
 
   document.getElementById(
     "linkIcon"
   ).value =
     item?.icon || "link";
 
+
   document.getElementById(
     "linkEnabled"
   ).checked =
     item?.enabled ?? true;
 
-  showMsg(editMsg, "");
+
+  showMsg(
+    editMsg,
+    ""
+  );
+
 
   editor.showModal();
-
-  setTimeout(() => {
-    document
-      .getElementById("linkTitle")
-      .focus();
-  }, 50);
 }
 
-
-/* =========================================
-   ADD LINK
-========================================= */
 
 addBtn.addEventListener(
   "click",
@@ -789,9 +1076,8 @@ addBtn.addEventListener(
 );
 
 
-/* EMPTY STATE ADD BUTTON */
-
 if (emptyAddBtn) {
+
   emptyAddBtn.addEventListener(
     "click",
     () => openEditor()
@@ -804,6 +1090,7 @@ if (emptyAddBtn) {
 ========================================= */
 
 function closeEditor() {
+
   editingId = null;
 
   if (editor.open) {
@@ -811,40 +1098,20 @@ function closeEditor() {
   }
 }
 
+
 cancelBtn.addEventListener(
   "click",
   closeEditor
 );
 
+
 if (closeEditorBtn) {
+
   closeEditorBtn.addEventListener(
     "click",
     closeEditor
   );
 }
-
-
-/* =========================================
-   CLICK OUTSIDE MODAL
-========================================= */
-
-editor.addEventListener(
-  "click",
-  (event) => {
-    const rect =
-      editor.getBoundingClientRect();
-
-    const inside =
-      event.clientX >= rect.left &&
-      event.clientX <= rect.right &&
-      event.clientY >= rect.top &&
-      event.clientY <= rect.bottom;
-
-    if (!inside) {
-      closeEditor();
-    }
-  }
-);
 
 
 /* =========================================
@@ -854,102 +1121,81 @@ editor.addEventListener(
 linkForm.addEventListener(
   "submit",
   async (event) => {
+
     event.preventDefault();
 
     showMsg(editMsg, "");
 
-    const title =
-      document
-        .getElementById("linkTitle")
-        .value
-        .trim();
 
-    const subtitle =
-      document
-        .getElementById("linkSubtitle")
-        .value
-        .trim();
+    const payload = {
 
-    const url =
-      document
-        .getElementById("linkUrl")
-        .value
-        .trim();
+      title:
+        document
+          .getElementById("linkTitle")
+          .value
+          .trim(),
 
-    const icon =
-      document
-        .getElementById("linkIcon")
-        .value
-        .trim();
+      subtitle:
+        document
+          .getElementById("linkSubtitle")
+          .value
+          .trim(),
 
-    const enabled =
-      document
-        .getElementById("linkEnabled")
-        .checked;
+      url:
+        document
+          .getElementById("linkUrl")
+          .value
+          .trim(),
+
+      icon:
+        document
+          .getElementById("linkIcon")
+          .value
+          .trim(),
+
+      enabled:
+        document
+          .getElementById("linkEnabled")
+          .checked
+
+    };
 
 
-    /* Basic validation */
+    if (!payload.title) {
 
-    if (!title) {
       showMsg(
         editMsg,
         "Please enter a link name."
       );
+
       return;
     }
 
-    if (!url) {
+
+    if (!payload.url) {
+
       showMsg(
         editMsg,
         "Please enter a URL."
       );
+
       return;
     }
-
-    if (!icon) {
-      showMsg(
-        editMsg,
-        "Please enter an icon."
-      );
-      return;
-    }
-
-
-    const payload = {
-      title,
-      subtitle,
-      url,
-      icon,
-      enabled
-    };
-
-
-    const saveButton =
-      linkForm.querySelector(
-        'button[type="submit"]'
-      );
-
-    saveButton.disabled = true;
-    saveButton.textContent = "Saving...";
 
 
     let result;
 
 
-    /* EDIT */
-
     if (editingId !== null) {
+
       result =
         await supabase
           .from("links")
           .update(payload)
           .eq("id", editingId);
 
-    }
+    } else {
 
-    /* ADD */
-
-    else {
       const {
         data: last,
         error: lastError
@@ -961,9 +1207,8 @@ linkForm.addEventListener(
         })
         .limit(1);
 
+
       if (lastError) {
-        saveButton.disabled = false;
-        saveButton.textContent = "💾 Save Link";
 
         showMsg(
           editMsg,
@@ -973,8 +1218,10 @@ linkForm.addEventListener(
         return;
       }
 
+
       payload.sort_order =
         (last?.[0]?.sort_order ?? 0) + 1;
+
 
       result =
         await supabase
@@ -983,11 +1230,8 @@ linkForm.addEventListener(
     }
 
 
-    saveButton.disabled = false;
-    saveButton.textContent = "💾 Save Link";
-
-
     if (result.error) {
+
       showMsg(
         editMsg,
         result.error.message
@@ -1000,51 +1244,6 @@ linkForm.addEventListener(
     closeEditor();
 
     await loadLinks();
-  }
-);
-
-
-/* =========================================
-   ESC KEY / DIALOG CLOSE
-========================================= */
-
-editor.addEventListener(
-  "close",
-  () => {
-    editingId = null;
-    linkForm.reset();
-
-    document.getElementById(
-      "linkEnabled"
-    ).checked = true;
-
-    showMsg(editMsg, "");
-  }
-);
-
-
-/* =========================================
-   SUPABASE AUTH STATE
-========================================= */
-
-supabase.auth.onAuthStateChange(
-  async (event, session) => {
-    if (
-      event === "SIGNED_IN" ||
-      event === "SIGNED_OUT" ||
-      event === "TOKEN_REFRESHED"
-    ) {
-      if (session) {
-        loginPanel.hidden = true;
-        appPanel.hidden = false;
-
-        await loadProfile();
-        await loadLinks();
-      } else {
-        loginPanel.hidden = false;
-        appPanel.hidden = true;
-      }
-    }
   }
 );
 
